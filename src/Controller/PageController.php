@@ -14,6 +14,12 @@ class PageController
         require 'src/views/login.php';
     }
 
+    #[GET('/register')]
+    public function register(): void
+    {
+        require 'src/views/login.php';
+    }
+
     #[NeedAuth]
     #[GET('/home')]
     public function index(): void
