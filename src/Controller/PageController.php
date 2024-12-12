@@ -17,7 +17,7 @@ class PageController
     #[GET('/register')]
     public function register(): void
     {
-        require 'src/views/login.php';
+        require 'src/views/register.php';
     }
 
     #[NeedAuth]

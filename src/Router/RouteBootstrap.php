@@ -39,8 +39,11 @@ class RouteBootstrap
                 $attributeName = $attribute->getName();
                 $httpMethod = $this->getHttpMethodFromAttribute($attributeName);
                 $attributeInstance = $attribute->newInstance();
-                $path = $basePath . $attributeInstance->path;
-                $needAuth = $needAuth || $attributeName === NeedAuth::class;
+                if (!$attributeInstance instanceof NeedAuth) {
+                    $path = $basePath . $attributeInstance->path;
+                } else {
+                    $needAuth = true;
+                }
 
                 if ($httpMethod) {
                     $this->routes[$httpMethod][$path] = [$controllerClass, $method->getName(), $needAuth];

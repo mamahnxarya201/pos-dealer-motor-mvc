@@ -9,18 +9,47 @@
 <body>
 <div class="login-container">
     <h1>Login</h1>
-    <form>
+    <form id="form-login" method="POST">
         <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-        <button type="submit">Login</button>
-        <button type="submit">Register</button>
+        <button id="submit_data" type="submit">Login</button>
+        <button type="button" onclick="window.location.href='/register'">Register</button>
     </form>
 </div>
+
+<script>
+    document.getElementById('form-login').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(document.getElementById('form-login'));
+
+        fetch('/api/auth/login', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/home';
+                    return response.text(); // Assuming the response is text
+                } else {
+                    alert('User & Password is wrong');
+                    throw new Error('Failed to submit form');
+                }
+            })
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to submit form');
+            });
+    });
+</script>
 </body>
 </html>

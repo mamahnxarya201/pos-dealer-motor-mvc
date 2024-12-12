@@ -18,7 +18,7 @@ class ConnectionPDO
             try {
                 $user = 'root';
                 $pass = 'root';
-                self::$db = PDO::connect('mysql:host=127.0.0.1;dbname=pos_dealer', $user, $pass);
+                self::$db = PDO::connect('mysql:host=127.0.0.1;dbname=pos_system', $user, $pass);
                 self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch(PDOException $e) {
                 throw new Exception("Error from database connection: " . $e->getMessage());
