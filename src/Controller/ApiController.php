@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use Model\Motor;
 use Model\Supplier;
 use Router\Attributes\GET;
 use Router\Attributes\POST;
@@ -80,6 +81,35 @@ class ApiController
             echo json_encode(['message' => 'Failed to update supplier']);
         }
     }
+
+    #[POST('/add_motor')]
+    public function addMotor(): void
+    {
+        $type = (string)$_POST['motor_type'];
+        $name = (string)$_POST['motor_name'];
+        $price = (int)$_POST['motor_price'];
+        $qty = (int)$_POST['motor_qty'];
+        $supplierId = (int)$_POST['supplier_motor_id'];
+
+        $supplier = Supplier::getById($supplierId);
+
+        if ($supplier) {
+            $motor = new Motor(null, $type, $name, $price, $qty, $supplier);
+            $isAdded = $motor->insert();
+
+            if ($isAdded) {
+                http_response_code(201);
+                echo json_encode(['message' => 'Motor added successfully']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['message' => 'Failed to add motor']);
+            }
+        } else {
+            http_response_code(404);
+            echo json_encode(['message' => 'Supplier not found']);
+        }
+    }
+
 
 
 }

@@ -11,7 +11,7 @@ require 'src/views/component/header.php';
             <th scope="col">Jumlah Motor</th>
             <th scope="col">Harga Motor</th>
             <th scope="col">Supplier Motor</th>
-            <th scope="col"><a type="button" class="btn btn-sm ml-2" onclick="modalSupplier()" style="background-color: #CD853F"><i class="fa fa-plus" style="color: #fff"></i></a></th>
+            <th scope="col"><a type="button" class="btn btn-sm ml-2" onclick="modalMotor()" style="background-color: #CD853F"><i class="fa fa-plus" style="color: #fff"></i></a></th>
         </tr>
         </thead>
         <tbody>
@@ -28,8 +28,8 @@ require 'src/views/component/header.php';
                 <td><?php echo $motor->price ?></td>
                 <td><?php echo $motor->supplier->nama ?></td>
                 <td>
-                    <a href="javascript:void(0)" onclick="editSupplier('<?php echo $motor->id ?>')" class="btn btn-sm bg-warning" title="Edit"><i class="fa fa-pencil" style="color: #fff"></i></a>
-                    <a href="javascript:void(0)" onclick="deleteSupplier('<?php echo $motor->id ?>')" class="btn btn-sm bg-danger" title="Hapus!">
+                    <a href="javascript:void(0)" onclick="editMotor('<?php echo $motor->id ?>')" class="btn btn-sm bg-warning" title="Edit"><i class="fa fa-pencil" style="color: #fff"></i></a>
+                    <a href="javascript:void(0)" onclick="deleteMotor('<?php echo $motor->id ?>')" class="btn btn-sm bg-danger" title="Hapus!">
                         <i class="fa fa-trash" style="color: #fff"></i>
                     </a>
                 </td>
@@ -62,7 +62,7 @@ require 'src/views/component/header.php';
                     </div>
                     <div class="form-group">
                         <label for="supplier_motor_merk">Tipe Motor</label>
-                        <input type="text" class="form-control" placeholder="Tipe Motor" id="motor_type" name="motor_type" required>
+                        <input type="text" class="form-control" placeholder="Tipe Motor" id="motor_tipe" name="motor_tipe" required>
                     </div>
                     <div class="form-group">
                         <label for="supplier_motor_kontak">Jumlah Motor</label>
@@ -95,34 +95,33 @@ require 'src/views/component/header.php';
         fetch('/api/get_supplier')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to fetch suppliers');
+                    throw new Error('Failed to fetch suppliers')
                 }
                 return response.json();
             })
             .then(data => {
-                const supplierDropdown = document.getElementById('supplier_motor_id');
+                const supplierDropdown = document.getElementById('supplier_motor_id')
                 data.forEach(supplier => {
-                    let option = document.createElement('option');
-                    option.value = supplier.id;
-                    option.textContent = supplier.nama;
-                    supplierDropdown.appendChild(option);
+                    let option = document.createElement('option')
+                    option.value = supplier.id
+                    option.textContent = supplier.nama
+                    supplierDropdown.appendChild(option)
                 });
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to load suppliers');
+                console.error('Error:', error)
+                alert('Failed to load suppliers')
             });
     });
 
     document.getElementById('proses_form_motor').addEventListener('submit', function(event) {
         event.preventDefault()
 
-        let form = document.getElementById('proses_form_motor');
+        let form = document.getElementById('proses_form_motor')
         let formData = new FormData(form);
-        let url = document.getElementById('form_motor_title').textContent === 'Tambah Supplier'
+        let url = document.getElementById('form_motor_title').textContent === 'Tambah Motor'
             ? '/api/add_supplier'
             : '/api/edit_supplier';
-
 
         fetch(url, {
             method: 'POST',
@@ -146,19 +145,19 @@ require 'src/views/component/header.php';
             })
     })
 
-    function modalSupplier() {
+    function modalMotor() {
         setForm('form', {
             motor_id: '',
             motor_name: '',
-            motor_type: '',
+            motor_tipe: '',
             motor_qty: 0,
             motor_price: 0,
             supplier_motor_id: ''
         });
-        document.getElementById('form_motor_title').textContent = 'Tambah Supplier'
+        document.getElementById('form_motor_title').textContent = 'Tambah Motor'
     }
 
-    async function editSupplier(id) {
+    async function editMotor(id) {
         fetch(`/api/get_supplier?id=${id}`)
             .then(response => {
                 if   (!response.ok) {
@@ -176,7 +175,7 @@ require 'src/views/component/header.php';
                         supplier_motor_merk: data.merk,
                         supplier_motor_kontak: data.kontak,
                     });
-                    document.getElementById('form_motor_title').textContent = 'Edit Supplier'
+                    document.getElementById('form_motor_title').textContent = 'Edit Motor'
                 }
             })
             .catch(error => {
@@ -185,7 +184,7 @@ require 'src/views/component/header.php';
             });
     }
 
-    function deleteSupplier(id) {
+    function deleteMotor(id) {
         fetch(`/api/delete_supplier?id=${id}`, {
             method: 'GET'
         })

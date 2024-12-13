@@ -66,4 +66,22 @@ class Motor
 
         return $listMotor;
     }
+
+    public function insert(): bool
+    {
+        $stmt = ConnectionPDO::connect()->prepare(
+            "INSERT INTO motor (motor_tipe, motor_name, motor_price, motor_qty, supplier_motor_id) 
+         VALUES (:type, :name, :price, :qty, :supplierId)"
+        );
+        $result = $stmt->execute([
+            'type' => $this->type,
+            'name' => $this->name,
+            'price' => $this->price,
+            'qty' => $this->qty,
+            'supplierId' => $this->supplier->id
+        ]);
+
+        return $result;
+    }
+
 }
