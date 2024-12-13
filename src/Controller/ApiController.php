@@ -61,4 +61,25 @@ class ApiController
         }
     }
 
+    #[POST('/edit_supplier')]
+    public function editSupplier(): void
+    {
+        $id = (int)$_POST['supplier_motor_id'];
+        $nama = (string)$_POST['supplier_motor_nama'];
+        $merk = (string)$_POST['supplier_motor_merk'];
+        $kontak = (string)$_POST['supplier_motor_kontak'];
+
+        $supplier = new Supplier($id, $nama, $merk, $kontak);
+        $isUpdated = $supplier->update();
+
+        if ($isUpdated) {
+            http_response_code(200);
+            echo json_encode(['message' => 'Supplier updated successfully']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['message' => 'Failed to update supplier']);
+        }
+    }
+
+
 }

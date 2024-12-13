@@ -35,4 +35,12 @@ class PageController
         $listSupplier = Supplier::getAll();
         require 'src/views/supplier.php';
     }
+
+    #[NeedAuth]
+    #[GET('/motor')]
+    public function motor(): void
+    {
+        $listSupplier = Supplier::getAll();
+        require 'src/views/supplier.php';
+    }
 }

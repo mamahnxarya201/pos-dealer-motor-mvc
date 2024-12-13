@@ -74,4 +74,24 @@ class Supplier
         ]);
         return $result;
     }
+
+    public function update(): bool
+    {
+        $stmt = ConnectionPDO::connect()->prepare(
+            "UPDATE supplier_motor 
+         SET supplier_motor_nama = :nama, 
+             supplier_motor_merk = :merk, 
+             supplier_motor_kontak = :kontak 
+         WHERE supplier_motor_id = :id"
+        );
+        $result = $stmt->execute([
+            'nama' => $this->nama,
+            'merk' => $this->merk,
+            'kontak' => $this->kontak,
+            'id' => $this->id
+        ]);
+
+        return $result;
+    }
+
 }

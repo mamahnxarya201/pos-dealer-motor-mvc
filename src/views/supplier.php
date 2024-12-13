@@ -49,6 +49,9 @@
             </div>
             <div class="modal-body">
                 <form id="proses_form_supplier">
+                    <div class="form-group" style="display: none">
+                        <input type="text" class="form-control" placeholder="id Supplier" id="supplier_motor_id" name="supplier_motor_id" required>
+                    </div>
                     <div class="form-group">
                         <label for="supplier_motor_nama">Nama Supplier</label>
                         <input type="text" class="form-control" placeholder="Nama Supplier" id="supplier_motor_nama" name="supplier_motor_nama" required>
@@ -74,12 +77,16 @@
 
 <script>
     document.getElementById('proses_form_supplier').addEventListener('submit', function(event) {
-        event.preventDefault();
+        event.preventDefault()
 
-        const form = document.getElementById('proses_form_supplier')
-        const formData = new FormData(form);
+        let form = document.getElementById('proses_form_supplier');
+        let formData = new FormData(form);
+        let url = document.getElementById('form_supplier_title').textContent === 'Tambah Supplier'
+            ? '/api/add_supplier'
+            : '/api/edit_supplier';
 
-        fetch('/api/add_supplier', {
+
+        fetch(url, {
             method: 'POST',
             body: formData
         })
@@ -92,8 +99,8 @@
             })
             .then(data => {
                 console.log('Success:', data)
-                alert('Supplier added successfully')
-                window.location.reload(); // Refresh the page
+                alert('Supplier updated successfully')
+                window.location.reload()
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -107,32 +114,33 @@
             supplier_motor_merk: '',
             supplier_motor_kontak: ''
         }, 'processsupplier.php?do=add');
-        document.getElementById('form_supplier_title').textContent = 'Tambah Supplier';
+        document.getElementById('form_supplier_title').textContent = 'Tambah Supplier'
     }
 
     async function editSupplier(id) {
         fetch(`/api/get_supplier?id=${id}`)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error fetching supplier data');
+                if   (!response.ok) {
+                    throw new Error('Error fetching supplier data')
                 }
-                return response.json();
+                return response.json()
             })
             .then(data => {
-                console.log(data);
+                console.log(data)
                 if (data) {
                     console.log(data)
                     setForm('form', {
+                        supplier_motor_id: data.id,
                         supplier_motor_nama: data.nama,
                         supplier_motor_merk: data.merk,
                         supplier_motor_kontak: data.kontak,
                     });
-                    document.getElementById('form_supplier_title').textContent = 'Edit Supplier';
+                    document.getElementById('form_supplier_title').textContent = 'Edit Supplier'
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to fetch supplier data');
+                console.error('Error:', error)
+                alert('Failed to fetch supplier data')
             });
     }
 
@@ -142,15 +150,15 @@
         })
             .then(response => {
                 if (response.ok) {
-                    window.location.reload();
+                    window.location.reload()
                 } else {
-                    alert('The operation was not successful');
+                    alert('The operation was not successful')
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('The operation was not successful');
-            });
+                alert('The operation was not successful')
+            })
     }
 
 </script>
