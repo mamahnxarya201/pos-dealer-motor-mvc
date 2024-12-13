@@ -19,13 +19,13 @@ class Order
 
     public static function getById(int $id): ?Order
     {
-        $stmt = ConnectionPDO::connect()->prepare("SELECT * FROM order WHERE order_id = ?");
+        $stmt = ConnectionPDO::connect()->prepare("SELECT * FROM `order` WHERE order_id = ?");
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!empty($row)) {
             $motor = Motor::getById($row['order_motor_id']);
-            $supplier = Supplier::getById($row['order_supplier_id']);
+            $supplier = Supplier::getById($row['order_supplier']);
             if (!is_null($motor) && !is_null($supplier)) {
                 return new Order(
                     $row['order_id'],
@@ -43,14 +43,14 @@ class Order
 
     public static function getAll(): array
     {
-        $stmt = ConnectionPDO::connect()->prepare("SELECT * FROM order");
+        $stmt = ConnectionPDO::connect()->prepare("SELECT * FROM `order`");
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $listOrder = [];
         if (!empty($data)) {
             foreach ($data as $row) {
                 $motor = Motor::getById($row['order_motor_id']);
-                $supplier = Supplier::getById($row['order_supplier_id']);
+                $supplier = Supplier::getById($row['order_supplier']);
                 if (!is_null($motor) && !is_null($supplier)) {
                     $listOrder[] = new Order(
                         $row['order_id'],
@@ -69,7 +69,7 @@ class Order
 
     public static function deleteById(int $id): bool
     {
-        $stmt = ConnectionPDO::connect()->prepare("DELETE FROM order WHERE order_id = ?");
+        $stmt = ConnectionPDO::connect()->prepare("DELETE FROM `order` WHERE order_id = ?");
         $result = $stmt->execute([$id]);
         return $result && $stmt->rowCount() > 0;
     }
@@ -77,7 +77,7 @@ class Order
     public function insert(): bool
     {
         $stmt = ConnectionPDO::connect()->prepare(
-            "INSERT INTO order (order_name, order_motor_id, order_supplier_id, order_jumlah, order_dilayani) 
+            "INSERT INTO `order` (order_name, order_motor_id, order_supplier, order_jumlah, order_dilayani) 
              VALUES (:name, :motor_id, :supplier_id, :jumlah, :dilayani)"
         );
         $result = $stmt->execute([
@@ -94,8 +94,8 @@ class Order
     public function update(): bool
     {
         $stmt = ConnectionPDO::connect()->prepare(
-            "UPDATE order 
-             SET order_name = :name, order_motor_id = :motor_id, order_supplier_id = :supplier_id, order_jumlah = :jumlah, order_dilayani = :dilayani 
+            "UPDATE `order`
+             SET order_name = :name, order_motor_id = :motor_id, order_supplier = :supplier_id, order_jumlah = :jumlah, order_dilayani = :dilayani 
              WHERE order_id = :id"
         );
         $result = $stmt->execute([

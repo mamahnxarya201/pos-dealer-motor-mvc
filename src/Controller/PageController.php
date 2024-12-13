@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Controller;
 
 use Model\Motor;
+use Model\Order;
 use Model\Supplier;
 use Router\Attributes\GET;
 use Router\Attributes\NeedAuth;
@@ -50,7 +51,7 @@ class PageController
     #[GET('/order')]
     public function order(): void
     {
-        $listMotor = Motor::getAll();
-        require 'src/views/motor.php';
+        $listOrder = Order::getAll();
+        require 'src/views/order.php';
     }
 }

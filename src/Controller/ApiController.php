@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Model\Motor;
+use Model\Order;
 use Model\Supplier;
 use Router\Attributes\GET;
 use Router\Attributes\POST;
@@ -171,4 +172,80 @@ class ApiController
             echo json_encode(['message' => 'Supplier not found']);
         }
     }
+
+    #[POST('/add_order')]
+    public function addOrder(): void
+    {
+        $orderName = (string)$_POST['order_name'];
+        $orderMotorId = (int)$_POST['order_motor_id'];
+        $orderJumlah = (int)$_POST['order_jumlah'];
+        $orderDilayani = (int)$_POST['order_dilayani'];
+        $orderSupplierId = (int)$_POST['supplier_order'];
+
+        $motor = Motor::getById($orderMotorId);
+        $supplier = Supplier::getById($orderSupplierId);
+
+        if ($motor && $supplier) {
+            $order = new Order(null, $orderName, $motor, $supplier, $orderJumlah, $orderDilayani);
+            $isAdded = $order->insert();
+
+            if ($isAdded) {
+                http_response_code(201);
+                echo json_encode(['message' => 'Order added successfully']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['message' => 'Failed to add order']);
+            }
+        } else {
+            http_response_code(404);
+            echo json_encode(['message' => 'Motor or Supplier not found']);
+        }
+    }
+
+    #[POST('/edit_order')]
+    public function editOrder(): void
+    {
+        $orderName = (string)$_POST['order_name'];
+        $orderMotorId = (int)$_POST['order_motor_id'];
+        $orderJumlah = (int)$_POST['order_jumlah'];
+        $orderDilayani = (int)$_POST['order_dilayani'];
+        $orderSupplierId = (int)$_POST['supplier_order'];
+        $orderId = (int)$_POST['order_id'];
+
+        $motor = Motor::getById($orderMotorId);
+        $supplier = Supplier::getById($orderSupplierId);
+
+        if ($motor && $supplier) {
+            $order = new Order($orderId, $orderName, $motor, $supplier, $orderJumlah, $orderDilayani);
+            $isAdded = $order->update();
+
+            if ($isAdded) {
+                http_response_code(201);
+                echo json_encode(['message' => 'Order added successfully']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['message' => 'Failed to add order']);
+            }
+        } else {
+            http_response_code(404);
+            echo json_encode(['message' => 'Motor or Supplier not found']);
+        }
+    }
+
+    #[GET('/get_order')]
+    public function gerOrderById(): void
+    {
+        $orderId = intval($_GET['id']);
+        $orderData = Order::getById($orderId);
+
+        if ($orderData) {
+            header('Content-Type: application/json');
+            echo json_encode($orderData);
+        } else {
+            http_response_code(404);
+            header('Content-Type: application/json');
+            echo json_encode([]);
+        }
+    }
+
 }

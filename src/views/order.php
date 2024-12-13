@@ -6,30 +6,30 @@ require 'src/views/component/header.php';
         <thead class="thead">
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Nama Motor</th>
-            <th scope="col">Tipe Motor</th>
-            <th scope="col">Jumlah Motor</th>
-            <th scope="col">Harga Motor</th>
-            <th scope="col">Supplier Motor</th>
-            <th scope="col"><a type="button" class="btn btn-sm ml-2" onclick="modalMotor()" style="background-color: #CD853F"><i class="fa fa-plus" style="color: #fff"></i></a></th>
+            <th scope="col">Nama</th>
+            <th scope="col">Motor</th>
+            <th scope="col">Jumlah</th>
+            <th scope="col">Supplier</th>
+            <th scope="col">Order Terlayani</th>
+            <th scope="col"><a type="button" class="btn btn-sm ml-2" onclick="modalOrder()" style="background-color: #CD853F"><i class="fa fa-plus" style="color: #fff"></i></a></th>
         </tr>
         </thead>
         <tbody>
         <?php $no = 1;
         /**
-         * @var $motor \Model\Motor
+         * @var $order \Model\Order
          */
-        foreach ($listMotor as $motor) { ?>
+        foreach ($listOrder as $order) { ?>
             <tr>
                 <th scope="row"><?php echo $no; ?></th>
-                <td><?php echo $motor->name; ?></td>
-                <td><?php echo $motor->type; ?></td>
-                <td><?php echo $motor->qty; ?></td>
-                <td><?php echo $motor->price ?></td>
-                <td><?php echo $motor->supplier->nama ?></td>
+                <td><?php echo $order->order_name; ?></td>
+                <td><?php echo $order->order_motor->name; ?></td>
+                <td><?php echo $order->order_jumlah; ?></td>
+                <td><?php echo $order->order_supplier->nama ?></td>
+                <td><?php echo $order->order_dilayani ?></td>
                 <td>
-                    <a href="javascript:void(0)" onclick="editMotor('<?php echo $motor->id ?>')" class="btn btn-sm bg-warning" title="Edit"><i class="fa fa-pencil" style="color: #fff"></i></a>
-                    <a href="javascript:void(0)" onclick="deleteMotor('<?php echo $motor->id ?>')" class="btn btn-sm bg-danger" title="Hapus!">
+                    <a href="javascript:void(0)" onclick="editOrder('<?php echo $order->order_id ?>')" class="btn btn-sm bg-warning" title="Edit"><i class="fa fa-pencil" style="color: #fff"></i></a>
+                    <a href="javascript:void(0)" onclick="deleteMotor('<?php echo $order->order_id ?>')" class="btn btn-sm bg-danger" title="Hapus!">
                         <i class="fa fa-trash" style="color: #fff"></i>
                     </a>
                 </td>
@@ -48,33 +48,35 @@ require 'src/views/component/header.php';
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="form_motor_title">Tambah Motor</h5>
+                <h5 class="modal-title" id="form_order_title">Tambah Order</h5>
                 <button type="button" class="close" onclick="closeModal('form')">×</button>
             </div>
             <div class="modal-body">
-                <form id="proses_form_motor">
+                <form id="proses_form_order">
                     <div class="form-group" style="display: none">
-                        <input type="text" class="form-control" placeholder="id motor" id="motor_id" name="motor_id">
+                        <input type="text" class="form-control" placeholder="id order" id="order_id" name="order_id">
                     </div>
                     <div class="form-group">
-                        <label for="supplier_motor_nama">Nama Motor</label>
-                        <input type="text" class="form-control" placeholder="Nama Motor" id="motor_name" name="motor_name" required>
+                        <label for="order_name">Nama Motor</label>
+                        <input type="text" class="form-control" placeholder="Nama Order" id="order_name" name="order_name" required>
                     </div>
                     <div class="form-group">
-                        <label for="supplier_motor_merk">Tipe Motor</label>
-                        <input type="text" class="form-control" placeholder="Tipe Motor" id="motor_tipe" name="motor_tipe" required>
+                        <label for="order_motor_id">Motor</label>
+                        <select class="form-control" id="order_motor_id" name="order_motor_id" required>
+                            <option value="">Select Motor</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="supplier_motor_kontak">Jumlah Motor</label>
-                        <input type="number" class="form-control" placeholder="Jumlah Motor" id="motor_qty" name="motor_qty" required>
+                        <label for="order_jumlah">Jumlah Order</label>
+                        <input type="number" class="form-control" placeholder="Jumlah Order" id="order_jumlah" name="order_jumlah" required>
                     </div>
                     <div class="form-group">
-                        <label for="supplier_motor_kontak">Harga Motor</label>
-                        <input type="number" class="form-control" placeholder="Harga Motor" id="motor_price" name="motor_price" required>
+                        <label for="order_dilayani">Order Dilayani</label>
+                        <input type="number" class="form-control" placeholder="Order Dilayani" id="order_dilayani" name="order_dilayani" required>
                     </div>
                     <div class="form-group">
-                        <label for="supplier_motor_id">Supplier</label>
-                        <select class="form-control" id="supplier_motor_id" name="supplier_motor_id" required>
+                        <label for="supplier_order">Supplier</label>
+                        <select class="form-control" id="supplier_order" name="supplier_order" required>
                             <option value="">Select Supplier</option>
                         </select>
                     </div>
@@ -100,7 +102,7 @@ require 'src/views/component/header.php';
                 return response.json();
             })
             .then(data => {
-                const supplierDropdown = document.getElementById('supplier_motor_id')
+                const supplierDropdown = document.getElementById('supplier_order')
                 data.forEach(supplier => {
                     let option = document.createElement('option')
                     option.value = supplier.id
@@ -112,16 +114,37 @@ require 'src/views/component/header.php';
                 console.error('Error:', error)
                 alert('Failed to load suppliers')
             });
+
+        fetch('/api/get_motor')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch suppliers')
+                }
+                return response.json();
+            })
+            .then(data => {
+                const motorDropdown = document.getElementById('order_motor_id')
+                data.forEach(motor => {
+                    let option = document.createElement('option')
+                    option.value = motor.id
+                    option.textContent = motor.name
+                    motorDropdown.appendChild(option)
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error)
+                alert('Failed to load suppliers')
+            });
     });
 
-    document.getElementById('proses_form_motor').addEventListener('submit', function(event) {
+    document.getElementById('proses_form_order').addEventListener('submit', function(event) {
         event.preventDefault()
 
-        let form = document.getElementById('proses_form_motor')
+        let form = document.getElementById('proses_form_order')
         let formData = new FormData(form);
-        let url = document.getElementById('form_motor_title').textContent === 'Tambah Motor'
-            ? '/api/add_motor'
-            : '/api/edit_motor';
+        let url = document.getElementById('form_order_title').textContent === 'Tambah Order'
+            ? '/api/add_order'
+            : '/api/edit_order';
 
         fetch(url, {
             method: 'POST',
@@ -145,20 +168,20 @@ require 'src/views/component/header.php';
             })
     })
 
-    function modalMotor() {
+    function modalOrder() {
         setForm('form', {
-            motor_id: '',
-            motor_name: '',
-            motor_tipe: '',
-            motor_qty: 0,
-            motor_price: 0,
-            supplier_motor_id: ''
+            order_id: '',
+            order_name: '',
+            order_jumlah: 0,
+            order_dilayani: 0,
+            supplier_order: '',
+            order_motor_id: ''
         });
-        document.getElementById('form_motor_title').textContent = 'Tambah Motor'
+        document.getElementById('form_order_title').textContent = 'Tambah Order'
     }
 
-    async function editMotor(id) {
-        fetch(`/api/get_motor?id=${id}`)
+    async function editOrder(id) {
+        fetch(`/api/get_order?id=${id}`)
             .then(response => {
                 if   (!response.ok) {
                     throw new Error('Error fetching supplier data')
@@ -170,14 +193,14 @@ require 'src/views/component/header.php';
                 if (data) {
                     console.log(data)
                     setForm('form', {
-                        motor_id: data.id,
-                        motor_name: data.name,
-                        motor_tipe: data.type,
-                        motor_qty: data.qty,
-                        motor_price: data.price,
-                        supplier_motor_id: data.supplier.id
+                        order_id: data.order_id,
+                        order_name: data.order_name,
+                        order_jumlah: data.order_jumlah,
+                        order_dilayani: data.order_dilayani,
+                        supplier_order: data.order_supplier.id,
+                        order_motor_id: data.order_motor.id
                     });
-                    document.getElementById('form_motor_title').textContent = 'Edit Motor'
+                    document.getElementById('form_order_title').textContent = 'Edit Order'
                 }
             })
             .catch(error => {
