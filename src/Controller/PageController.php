@@ -22,12 +22,13 @@ class PageController
         require 'src/views/register.php';
     }
 
-    #[NeedAuth]
-    #[GET('/home')]
-    public function index(): void
-    {
-        require 'src/views/home.php';
-    }
+    // ga sempet woakakw
+//    #[NeedAuth]
+//    #[GET('/home')]
+//    public function index(): void
+//    {
+//        require 'src/views/home.php';
+//    }
 
     #[NeedAuth]
     #[GET('/supplier')]
@@ -40,6 +41,14 @@ class PageController
     #[NeedAuth]
     #[GET('/motor')]
     public function motor(): void
+    {
+        $listMotor = Motor::getAll();
+        require 'src/views/motor.php';
+    }
+
+    #[NeedAuth]
+    #[GET('/order')]
+    public function order(): void
     {
         $listMotor = Motor::getAll();
         require 'src/views/motor.php';

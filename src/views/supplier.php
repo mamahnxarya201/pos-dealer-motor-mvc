@@ -37,7 +37,7 @@
 </div>
 
 <div class="footer">
-    <p align="center">&copy; TOKO KODRATT</p>
+    <p align="center">&copy; DEALER PEDA HEREK CAK MUJI</p>
 </div>
 
 <div class="modal" id="form">

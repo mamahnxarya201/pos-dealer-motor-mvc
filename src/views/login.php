@@ -35,7 +35,7 @@
         })
             .then(response => {
                 if (response.ok) {
-                    window.location.href = '/home';
+                    window.location.href = '/motor';
                     return response.text(); // Assuming the response is text
                 } else {
                     alert('User & Password is wrong');

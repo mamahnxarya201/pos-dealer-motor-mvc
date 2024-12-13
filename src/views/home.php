@@ -30,7 +30,7 @@
 <div class="container-fluid  fixed-bottom bg-light" style=" color: #999;">
     <div class="row">
         <div class="col-sm-12">
-            <p align="center">&copy; TOKO KODRATT</p>
+            <p align="center">&copy; DEALER PEDA HEREK CAK MUJI</p>
         </div>
     </div>
 </div>
