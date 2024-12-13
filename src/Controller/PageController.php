@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Controller;
 
+use Model\Motor;
 use Model\Supplier;
 use Router\Attributes\GET;
 use Router\Attributes\NeedAuth;
@@ -40,7 +41,7 @@ class PageController
     #[GET('/motor')]
     public function motor(): void
     {
-        $listSupplier = Supplier::getAll();
-        require 'src/views/supplier.php';
+        $listMotor = Motor::getAll();
+        require 'src/views/motor.php';
     }
 }

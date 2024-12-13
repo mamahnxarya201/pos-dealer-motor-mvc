@@ -14,7 +14,7 @@ class ApiController
     public function getSupplierDataById(): void
     {
         $supplierId = intval($_GET['id']);
-        $supplierData = Supplier::getById($supplierId);
+        $supplierData = $supplierId > 0 ? Supplier::getById($supplierId) : Supplier::getAll();
 
         if ($supplierData) {
             header('Content-Type: application/json');
