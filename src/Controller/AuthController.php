@@ -11,7 +11,7 @@ use Router\Attributes\Prefix;
 class AuthController
 {
     #[POST('/login')]
-    public function login()
+    public function login(): void
     {
         $email = (string)$_POST['email'];
         $password = (string)$_POST['password'];
@@ -33,7 +33,7 @@ class AuthController
     }
 
     #[POST('/register')]
-    public function register()
+    public function register(): void
     {
         $email = (string)$_POST['email'];
         $password = (string)$_POST['password'];

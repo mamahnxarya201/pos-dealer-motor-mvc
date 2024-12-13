@@ -14,15 +14,20 @@
         </thead>
         <tbody>
         <?php $no = 1;
-        foreach ($supplier as $datasupplier) { ?>
+        /**
+         * @var $supplier \Model\Supplier
+         */
+        foreach ($listSupplier as $supplier) { ?>
             <tr>
                 <th scope="row"><?php echo $no; ?></th>
-                <td><?php echo $datasupplier['supplier_motor_nama']; ?></td>
-                <td><?php echo $datasupplier['supplier_motor_merk']; ?></td>
-                <td><?php echo $datasupplier['supplier_motor_kontak']; ?></td>
+                <td><?php echo $supplier->nama; ?></td>
+                <td><?php echo $supplier->merk; ?></td>
+                <td><?php echo $supplier->kontak; ?></td>
                 <td>
-                    <a href="javascript:void(0)" onclick="editSupplier('<?php echo $datasupplier['supplier_motor_id'] ?>')" class="btn btn-sm bg-warning" title="Edit"><i class="fa fa-pencil" style="color: #fff"></i></a>
-                    <a href="processsupplier.php?do=delete&id=<?php echo $datasupplier['supplier_motor_id'] ?>" class="btn btn-sm bg-danger" title="Hapus!"><i class="fa fa-trash" style="color: #fff"></i></a>
+                    <a href="javascript:void(0)" onclick="editSupplier('<?php echo $supplier->id ?>')" class="btn btn-sm bg-warning" title="Edit"><i class="fa fa-pencil" style="color: #fff"></i></a>
+                    <a href="javascript:void(0)" onclick="deleteSupplier('<?php echo $supplier->id ?>')" class="btn btn-sm bg-danger" title="Hapus!">
+                        <i class="fa fa-trash" style="color: #fff"></i>
+                    </a>
                 </td>
             </tr>
             <?php $no++;
@@ -43,18 +48,18 @@
                 <button type="button" class="close" onclick="closeModal('form')">×</button>
             </div>
             <div class="modal-body">
-                <form action="processsupplier.php?do=" id="proses_form_supplier" method="POST">
+                <form id="proses_form_supplier">
                     <div class="form-group">
                         <label for="supplier_motor_nama">Nama Supplier</label>
-                        <input type="text" class="form-control" placeholder="Nama Supplier" id="supplier_motor_nama" name="supplier_motor_nama">
+                        <input type="text" class="form-control" placeholder="Nama Supplier" id="supplier_motor_nama" name="supplier_motor_nama" required>
                     </div>
                     <div class="form-group">
                         <label for="supplier_motor_merk">Merk</label>
-                        <input type="text" class="form-control" placeholder="Merk Supplier" id="supplier_motor_merk" name="supplier_motor_merk">
+                        <input type="text" class="form-control" placeholder="Merk Supplier" id="supplier_motor_merk" name="supplier_motor_merk" required>
                     </div>
                     <div class="form-group">
                         <label for="supplier_motor_kontak">Kontak</label>
-                        <input type="text" class="form-control" placeholder="Kontak Supplier" id="supplier_motor_kontak" name="supplier_motor_kontak">
+                        <input type="text" class="form-control" placeholder="Kontak Supplier" id="supplier_motor_kontak" name="supplier_motor_kontak" required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" onclick="closeModal('form')">Close</button>
@@ -68,11 +73,86 @@
 </body>
 
 <script>
-    document.getElementById("form_supplier_title").addEventListener('submit', (event) => {
-        const formOrder = document.getElementById('form_order').value;
-        event.target.action += formOrder.includes('Edit') ? 'edit' : 'add';
-        console.log(event.target.action);
-    });
+    document.getElementById('proses_form_supplier').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = document.getElementById('proses_form_supplier')
+        const formData = new FormData(form);
+
+        fetch('/api/add_supplier', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    throw new Error('Failed to add supplier')
+                }
+            })
+            .then(data => {
+                console.log('Success:', data)
+                alert('Supplier added successfully')
+                window.location.reload(); // Refresh the page
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to add supplier')
+            })
+    })
+
+    function modalSupplier() {
+        setForm('form', {
+            supplier_motor_nama: '',
+            supplier_motor_merk: '',
+            supplier_motor_kontak: ''
+        }, 'processsupplier.php?do=add');
+        document.getElementById('form_supplier_title').textContent = 'Tambah Supplier';
+    }
+
+    async function editSupplier(id) {
+        fetch(`/api/get_supplier?id=${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error fetching supplier data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                if (data) {
+                    console.log(data)
+                    setForm('form', {
+                        supplier_motor_nama: data.nama,
+                        supplier_motor_merk: data.merk,
+                        supplier_motor_kontak: data.kontak,
+                    });
+                    document.getElementById('form_supplier_title').textContent = 'Edit Supplier';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to fetch supplier data');
+            });
+    }
+
+    function deleteSupplier(id) {
+        fetch(`/api/delete_supplier?id=${id}`, {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('The operation was not successful');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('The operation was not successful');
+            });
+    }
+
 </script>
 
 </html>

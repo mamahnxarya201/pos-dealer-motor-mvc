@@ -4,6 +4,7 @@
     <title>StockGudang - Kelola gudang motor anda dengan cepat</title>
     <link rel="stylesheet" href="/src/views/resources/css/style.css">
     <link rel="stylesheet" href="/src/views/resources/fonts/css/font-awesome.min.css">
+    <script src="/src/views/resources/js/util.js" defer></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
