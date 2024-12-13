@@ -210,7 +210,7 @@ require 'src/views/component/header.php';
     }
 
     function deleteMotor(id) {
-        fetch(`/api/delete_motor?id=${id}`, {
+        fetch(`/api/delete_order?id=${id}`, {
             method: 'GET'
         })
             .then(response => {

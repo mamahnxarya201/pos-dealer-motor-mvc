@@ -248,4 +248,21 @@ class ApiController
         }
     }
 
+    #[GET('/delete_order')]
+    public function deleteOrderrDataById(): void
+    {
+        $orderId = intval($_GET['id']);
+        $oderData = Order::deleteById($orderId);
+
+        if ($oderData) {
+            http_response_code(200);
+            echo json_encode(['message' => 'Delete successful']);
+        } else {
+            http_response_code(404);
+            header('Content-Type: application/json');
+            echo json_encode([]);
+        }
+    }
+
+
 }
