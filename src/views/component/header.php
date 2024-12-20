@@ -22,6 +22,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="/order">Order motor</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
         </ul>
     </div>
 </nav>

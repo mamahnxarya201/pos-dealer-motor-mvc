@@ -185,9 +185,16 @@ class ApiController
         $motor = Motor::getById($orderMotorId);
         $supplier = Supplier::getById($orderSupplierId);
 
+        if ($motor->getQty() < $orderJumlah) {
+            http_response_code(500);
+            echo json_encode(['message' => 'Failed to add order']);
+        }
+
         if ($motor && $supplier) {
             $order = new Order(null, $orderName, $motor, $supplier, $orderJumlah, $orderDilayani);
             $isAdded = $order->insert();
+            $motor->setQty($motor->getQty() -  $orderJumlah);
+            $motor->update();
 
             if ($isAdded) {
                 http_response_code(201);

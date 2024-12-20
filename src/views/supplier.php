@@ -50,7 +50,7 @@
             <div class="modal-body">
                 <form id="proses_form_supplier">
                     <div class="form-group" style="display: none">
-                        <input type="text" class="form-control" placeholder="id Supplier" id="supplier_motor_id" name="supplier_motor_id" required>
+                        <input type="text" class="form-control" placeholder="id Supplier" id="supplier_motor_id" name="supplier_motor_id">
                     </div>
                     <div class="form-group">
                         <label for="supplier_motor_nama">Nama Supplier</label>

@@ -17,6 +17,14 @@ class PageController
         require 'src/views/login.php';
     }
 
+    #[GET('/logout')]
+    public function logOut(): void
+    {
+        session_destroy();
+        header('Location: /');
+        die();
+    }
+
     #[GET('/register')]
     public function register(): void
     {

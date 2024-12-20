@@ -57,7 +57,7 @@ require 'src/views/component/header.php';
                         <input type="text" class="form-control" placeholder="id order" id="order_id" name="order_id">
                     </div>
                     <div class="form-group">
-                        <label for="order_name">Nama Motor</label>
+                        <label for="order_name">Nama Order</label>
                         <input type="text" class="form-control" placeholder="Nama Order" id="order_name" name="order_name" required>
                     </div>
                     <div class="form-group">
@@ -118,7 +118,7 @@ require 'src/views/component/header.php';
         fetch('/api/get_motor')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to fetch suppliers')
+                    throw new Error('Failed to fetch motor')
                 }
                 return response.json();
             })
@@ -133,7 +133,7 @@ require 'src/views/component/header.php';
             })
             .catch(error => {
                 console.error('Error:', error)
-                alert('Failed to load suppliers')
+                alert('Failed to load motor')
             });
     });
 
@@ -154,17 +154,17 @@ require 'src/views/component/header.php';
                 if (response.ok) {
                     return response.json()
                 } else {
-                    throw new Error('Failed to add motor')
+                    throw new Error('Failed to add order')
                 }
             })
             .then(data => {
                 console.log('Success:', data)
-                alert('Motor updated successfully')
+                alert('Order updated successfully')
                 window.location.reload()
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Failed to add motor')
+                alert('Failed to add order')
             })
     })
 

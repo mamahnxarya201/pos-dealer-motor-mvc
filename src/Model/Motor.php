@@ -19,6 +19,16 @@ class Motor
     {
     }
 
+    public function getQty(): int
+    {
+        return $this->qty;
+    }
+
+    public function setQty(int $qty): void
+    {
+        $this->qty = $qty;
+    }
+
     public static function getById(int $id): ?Motor
     {
         $stmt = ConnectionPDO::connect()->prepare("select * from motor where motor_id = ?");
